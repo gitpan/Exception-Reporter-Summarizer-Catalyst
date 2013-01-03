@@ -2,13 +2,22 @@ use strict;
 use warnings;
 package Exception::Reporter::Summarizer::Catalyst;
 {
-  $Exception::Reporter::Summarizer::Catalyst::VERSION = '0.001';
+  $Exception::Reporter::Summarizer::Catalyst::VERSION = '0.002';
 }
 use parent 'Exception::Reporter::Summarizer';
 # ABSTRACT: a summarizer for Catalyst applications
 
 
 use Try::Tiny;
+
+sub new {
+  my ($class, $arg) = @_;
+  $arg ||= {};
+
+  return bless { resolve_hostname => !! $arg->{resolve_hostname} } => $class;
+}
+
+sub resolve_hostname { $_[0]->{resolve_hostname} }
 
 sub can_summarize {
   my ($self, $entry) = @_;
@@ -59,11 +68,12 @@ sub summarize_request {
     body_parameters  => $req->body_parameters,
     cookies          => \%cookie_str,
     headers          => $req->headers,
-    hostname         => $req->hostname,
     method           => $req->method,
     query_parameters => $req->query_parameters,
     uri              => "" . $req->uri,
     uploads          => $req->uploads,
+
+    ($self->resolve_hostname ? (hostname => $req->hostname) : ()),
   };
 
   return {
@@ -79,7 +89,7 @@ sub summarize_response {
   my $res = $c->res;
   return {
     filename => 'response.txt',
-    %{ $self->dump($res, { basename => 'resposne' })  },
+    %{ $self->dump($res, { basename => 'response' })  },
     ident    => 'catalyst response',
   };
 }
@@ -141,13 +151,24 @@ Exception::Reporter::Summarizer::Catalyst - a summarizer for Catalyst applicatio
 
 =head1 VERSION
 
-version 0.001
+version 0.002
 
 =head1 OVERVIEW
 
 If added as a summarizer to an L<Exception::Reporter>, this plugin will
 summarize Catalyst objects, adding summaries for the request, stash, errors,
 user, and session.
+
+=head1 ATTRIBUTES
+
+=head2 resolve_hostname
+
+If true, the summary will include the hostname of the remote client.  Catalyst
+I<always> resolves this hostname the first time it's requested and I<never>
+accepts it from the server.  That means it might be slow.
+
+Right now, this defaults to true.  It might default to false later.  Consider
+being explicit if you're concerned about this behavior.
 
 =head1 AUTHOR
 
