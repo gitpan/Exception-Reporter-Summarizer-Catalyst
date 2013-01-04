@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Exception::Reporter::Summarizer::Catalyst;
 {
-  $Exception::Reporter::Summarizer::Catalyst::VERSION = '0.002';
+  $Exception::Reporter::Summarizer::Catalyst::VERSION = '0.003';
 }
 use parent 'Exception::Reporter::Summarizer';
 # ABSTRACT: a summarizer for Catalyst applications
@@ -72,6 +72,7 @@ sub summarize_request {
     query_parameters => $req->query_parameters,
     uri              => "" . $req->uri,
     uploads          => $req->uploads,
+    path             => $req->path,
 
     ($self->resolve_hostname ? (hostname => $req->hostname) : ()),
   };
@@ -151,7 +152,7 @@ Exception::Reporter::Summarizer::Catalyst - a summarizer for Catalyst applicatio
 
 =head1 VERSION
 
-version 0.002
+version 0.003
 
 =head1 OVERVIEW
 
