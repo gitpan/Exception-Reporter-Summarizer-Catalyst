@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Exception::Reporter::Summarizer::Catalyst;
 {
-  $Exception::Reporter::Summarizer::Catalyst::VERSION = '0.003';
+  $Exception::Reporter::Summarizer::Catalyst::VERSION = '0.004';
 }
 use parent 'Exception::Reporter::Summarizer';
 # ABSTRACT: a summarizer for Catalyst applications
@@ -152,7 +152,7 @@ Exception::Reporter::Summarizer::Catalyst - a summarizer for Catalyst applicatio
 
 =head1 VERSION
 
-version 0.003
+version 0.004
 
 =head1 OVERVIEW
 
